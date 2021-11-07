@@ -17,7 +17,7 @@ namespace DeveloperTask.Controllers
         // GET: Users
         public ActionResult Index()
         {
-            var users = db.Users.Where(x=>x.Disabled == false);
+            var users = db.Users.Where(x => x.Disabled == false);
             ViewBag.ErrorMessage = TempData["UserExistError"];
             return View(users.ToList());
         }
@@ -29,7 +29,7 @@ namespace DeveloperTask.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.Users.Where(x=>x.Disabled == false && x.Id == id).FirstOrDefault();
+            User user = db.Users.Where(x => x.Disabled == false && x.Id == id).FirstOrDefault();
             if (user == null)
             {
                 return HttpNotFound();
@@ -93,7 +93,7 @@ namespace DeveloperTask.Controllers
         {
             if (ModelState.IsValid)
             {
-                var res = CheckUserWithEmailOrUsernameExist(user,true);
+                var res = CheckUserWithEmailOrUsernameExist(user, true);
                 if (res is RedirectToRouteResult)
                     return res;
 
@@ -136,17 +136,17 @@ namespace DeveloperTask.Controllers
         }
 
         /// <summary>
-        /// check if any User with same username/email already exists
+        /// Check if any User with same username/email already exists
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        private ActionResult CheckUserWithEmailOrUsernameExist(User user, bool bFromUpdate=false)
+        private ActionResult CheckUserWithEmailOrUsernameExist(User user, bool bFromUpdate = false)
         {
             User existedUser = null;
             if (bFromUpdate)
-                existedUser = db.Users.Where(x => x.Disabled == false && x.Id != user.Id && (x.Username.ToLower() == user.Username.ToLower() || x.Email.ToLower() == user.Email.ToLower())).FirstOrDefault();
+                existedUser = db.Users.Where(x => x.Id != user.Id && (x.Username.ToLower() == user.Username.ToLower() || x.Email.ToLower() == user.Email.ToLower())).FirstOrDefault();
             else
-                existedUser = db.Users.Where(x => x.Disabled == false && (x.Username.ToLower() == user.Username.ToLower() || x.Email.ToLower() == user.Email.ToLower())).FirstOrDefault();
+                existedUser = db.Users.Where(x => (x.Username.ToLower() == user.Username.ToLower() || x.Email.ToLower() == user.Email.ToLower())).FirstOrDefault();
 
             if (existedUser != null)
             {

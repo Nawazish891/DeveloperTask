@@ -1,0 +1,474 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DeveloperTaskDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="CreatedBy" Type="bigint" Nullable="false" />
+          <Property Name="Disabled" Type="bit" Nullable="false" />
+          <Property Name="UpdatedBy" Type="bigint" />
+          <Property Name="UpdatedAt" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Reminder">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="CategoryId" Type="bigint" Nullable="false" />
+          <Property Name="SubCategoryId" Type="bigint" />
+          <Property Name="CreatedBy" Type="bigint" Nullable="false" />
+          <Property Name="Disabled" Type="bit" Nullable="false" />
+          <Property Name="UpdatedAt" Type="datetime" />
+          <Property Name="UpdatedBy" Type="bigint" />
+        </EntityType>
+        <EntityType Name="SubCategory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="CatergoryId" Type="bigint" Nullable="false" />
+          <Property Name="Disabled" Type="bit" Nullable="false" />
+          <Property Name="UpdatedAt" Type="datetime" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="Disabled" Type="bit" Nullable="false" />
+          <Property Name="UpdatedAt" Type="datetime" />
+          <Property Name="UpdatedBy" Type="bigint" />
+        </EntityType>
+        <Association Name="FK_Category_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Category" Type="Self.Category" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Category">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Category_User1">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Category" Type="Self.Category" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Category">
+              <PropertyRef Name="UpdatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reminder_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Reminder" Type="Self.Reminder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Reminder">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reminder_SubCategory">
+          <End Role="SubCategory" Type="Self.SubCategory" Multiplicity="0..1" />
+          <End Role="Reminder" Type="Self.Reminder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Reminder">
+              <PropertyRef Name="SubCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reminder_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Reminder" Type="Self.Reminder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Reminder">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reminder_User1">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Reminder" Type="Self.Reminder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Reminder">
+              <PropertyRef Name="UpdatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubCategory_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="SubCategory" Type="Self.SubCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubCategory">
+              <PropertyRef Name="CatergoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="User1" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User1">
+              <PropertyRef Name="UpdatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DeveloperTaskDBModelStoreContainer">
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Reminder" EntityType="Self.Reminder" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SubCategory" EntityType="Self.SubCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Category_User" Association="Self.FK_Category_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Category" EntitySet="Category" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Category_User1" Association="Self.FK_Category_User1">
+            <End Role="User" EntitySet="User" />
+            <End Role="Category" EntitySet="Category" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reminder_Category" Association="Self.FK_Reminder_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Reminder" EntitySet="Reminder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reminder_SubCategory" Association="Self.FK_Reminder_SubCategory">
+            <End Role="SubCategory" EntitySet="SubCategory" />
+            <End Role="Reminder" EntitySet="Reminder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reminder_User" Association="Self.FK_Reminder_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Reminder" EntitySet="Reminder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reminder_User1" Association="Self.FK_Reminder_User1">
+            <End Role="User" EntitySet="User" />
+            <End Role="Reminder" EntitySet="Reminder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubCategory_Category" Association="Self.FK_SubCategory_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="SubCategory" EntitySet="SubCategory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_User" Association="Self.FK_User_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="User1" EntitySet="User" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DeveloperTaskDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int64" Nullable="false" />
+          <Property Name="Disabled" Type="Boolean" Nullable="false" />
+          <Property Name="UpdatedBy" Type="Int64" />
+          <Property Name="UpdatedAt" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Category_User" FromRole="Category" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="Self.FK_Category_User1" FromRole="Category" ToRole="User" />
+          <NavigationProperty Name="Reminders" Relationship="Self.FK_Reminder_Category" FromRole="Category" ToRole="Reminder" />
+          <NavigationProperty Name="SubCategories" Relationship="Self.FK_SubCategory_Category" FromRole="Category" ToRole="SubCategory" />
+        </EntityType>
+        <EntityType Name="Reminder">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CategoryId" Type="Int64" Nullable="false" />
+          <Property Name="SubCategoryId" Type="Int64" />
+          <Property Name="CreatedBy" Type="Int64" Nullable="false" />
+          <Property Name="Disabled" Type="Boolean" Nullable="false" />
+          <Property Name="UpdatedAt" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedBy" Type="Int64" />
+          <NavigationProperty Name="Category" Relationship="Self.FK_Reminder_Category" FromRole="Reminder" ToRole="Category" />
+          <NavigationProperty Name="SubCategory" Relationship="Self.FK_Reminder_SubCategory" FromRole="Reminder" ToRole="SubCategory" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Reminder_User" FromRole="Reminder" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="Self.FK_Reminder_User1" FromRole="Reminder" ToRole="User" />
+        </EntityType>
+        <EntityType Name="SubCategory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CatergoryId" Type="Int64" Nullable="false" />
+          <Property Name="Disabled" Type="Boolean" Nullable="false" />
+          <Property Name="UpdatedAt" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Category" Relationship="Self.FK_SubCategory_Category" FromRole="SubCategory" ToRole="Category" />
+          <NavigationProperty Name="Reminders" Relationship="Self.FK_Reminder_SubCategory" FromRole="SubCategory" ToRole="Reminder" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Disabled" Type="Boolean" Nullable="false" />
+          <Property Name="UpdatedAt" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedBy" Type="Int64" />
+          <NavigationProperty Name="Categories" Relationship="Self.FK_Category_User" FromRole="User" ToRole="Category" />
+          <NavigationProperty Name="Categories1" Relationship="Self.FK_Category_User1" FromRole="User" ToRole="Category" />
+          <NavigationProperty Name="Reminders" Relationship="Self.FK_Reminder_User" FromRole="User" ToRole="Reminder" />
+          <NavigationProperty Name="Reminders1" Relationship="Self.FK_Reminder_User1" FromRole="User" ToRole="Reminder" />
+          <NavigationProperty Name="User1" Relationship="Self.FK_User_User" FromRole="User" ToRole="User1" />
+          <NavigationProperty Name="User2" Relationship="Self.FK_User_User" FromRole="User1" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Category_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Category" Type="Self.Category" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Category">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Category_User1">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Category" Type="Self.Category" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Category">
+              <PropertyRef Name="UpdatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reminder_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Reminder" Type="Self.Reminder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Reminder">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubCategory_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="SubCategory" Type="Self.SubCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubCategory">
+              <PropertyRef Name="CatergoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reminder_SubCategory">
+          <End Role="SubCategory" Type="Self.SubCategory" Multiplicity="0..1" />
+          <End Role="Reminder" Type="Self.Reminder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Reminder">
+              <PropertyRef Name="SubCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reminder_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Reminder" Type="Self.Reminder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Reminder">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reminder_User1">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Reminder" Type="Self.Reminder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Reminder">
+              <PropertyRef Name="UpdatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="User1" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User1">
+              <PropertyRef Name="UpdatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DeveloperTaskDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Categories" EntityType="Self.Category" />
+          <EntitySet Name="Reminders" EntityType="Self.Reminder" />
+          <EntitySet Name="SubCategories" EntityType="Self.SubCategory" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_Category_User" Association="Self.FK_Category_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Category" EntitySet="Categories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Category_User1" Association="Self.FK_Category_User1">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Category" EntitySet="Categories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reminder_Category" Association="Self.FK_Reminder_Category">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Reminder" EntitySet="Reminders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubCategory_Category" Association="Self.FK_SubCategory_Category">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="SubCategory" EntitySet="SubCategories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reminder_SubCategory" Association="Self.FK_Reminder_SubCategory">
+            <End Role="SubCategory" EntitySet="SubCategories" />
+            <End Role="Reminder" EntitySet="Reminders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reminder_User" Association="Self.FK_Reminder_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Reminder" EntitySet="Reminders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reminder_User1" Association="Self.FK_Reminder_User1">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Reminder" EntitySet="Reminders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_User" Association="Self.FK_User_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="User1" EntitySet="Users" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DeveloperTaskDBModelStoreContainer" CdmEntityContainer="DeveloperTaskDBEntities">
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="DeveloperTaskDBModel.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Disabled" ColumnName="Disabled" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Reminders">
+            <EntityTypeMapping TypeName="DeveloperTaskDBModel.Reminder">
+              <MappingFragment StoreEntitySet="Reminder">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="SubCategoryId" ColumnName="SubCategoryId" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Disabled" ColumnName="Disabled" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SubCategories">
+            <EntityTypeMapping TypeName="DeveloperTaskDBModel.SubCategory">
+              <MappingFragment StoreEntitySet="SubCategory">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CatergoryId" ColumnName="CatergoryId" />
+                <ScalarProperty Name="Disabled" ColumnName="Disabled" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="DeveloperTaskDBModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Disabled" ColumnName="Disabled" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

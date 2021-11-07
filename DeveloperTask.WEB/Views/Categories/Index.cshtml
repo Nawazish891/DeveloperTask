@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DeveloperTask.DAL.User>
+﻿@model IEnumerable<DeveloperTask.DAL.Category>
 
 @{
     ViewBag.Title = "Index";
@@ -7,25 +7,12 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New User", "Create")
+    @Html.ActionLink("Create New", "Create")
 </p>
-
-@if (ViewBag.ErrorMessage != null)
-{
-    <h3 style="color:red">
-        Unable to create user because @ViewBag.ErrorMessage
-    </h3>
-}
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Username)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Password)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
+            @Html.DisplayNameFor(model => model.Name)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.CreateDate) (UTC)
@@ -40,17 +27,13 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Username)
+                @Html.DisplayFor(modelItem => item.Name)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.CreateDate)
             </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.UpdatedAt)
             </td>

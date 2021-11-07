@@ -27,6 +27,7 @@ namespace DeveloperTask.DAL
         public bool Disabled { get; set; }
         public Nullable<long> UpdatedBy { get; set; }
         public Nullable<System.DateTime> UpdatedAt { get; set; }
+        public System.DateTime CreateDate { get; set; }
     
         public virtual User User { get; set; }
         public virtual User User1 { get; set; }

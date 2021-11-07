@@ -25,6 +25,7 @@ namespace DeveloperTask.DAL
         public long CatergoryId { get; set; }
         public bool Disabled { get; set; }
         public Nullable<System.DateTime> UpdatedAt { get; set; }
+        public System.DateTime CreateDate { get; set; }
     
         public virtual Category Category { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using DeveloperTask.DAL;
+using DeveloperTask.WEB.Models;
 
 namespace DeveloperTask.Controllers
 {
@@ -44,7 +45,6 @@ namespace DeveloperTask.Controllers
         // GET: Users/Create
         public ActionResult Create()
         {
-            ViewBag.UpdatedBy = new SelectList(m_db.Users, "Id", "Username");
             return View();
         }
 
@@ -57,7 +57,7 @@ namespace DeveloperTask.Controllers
         {
             if (ModelState.IsValid)
             {
-                var res = CheckUserWithEmailOrUsernameExist(user);
+                var res = ValidateUserWithEmailOrUsernameExist(user);
                 if (res is RedirectToRouteResult)
                     return res;
 
@@ -68,7 +68,6 @@ namespace DeveloperTask.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.UpdatedBy = new SelectList(m_db.Users, "Id", "Username", user.UpdatedBy);
             return View(user);
         }
 
@@ -84,7 +83,6 @@ namespace DeveloperTask.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.UpdatedBy = new SelectList(m_db.Users, "Id", "Username", user.UpdatedBy);
             return View(user);
         }
 
@@ -97,16 +95,16 @@ namespace DeveloperTask.Controllers
         {
             if (ModelState.IsValid)
             {
-                var res = CheckUserWithEmailOrUsernameExist(user, true);
+                var res = ValidateUserWithEmailOrUsernameExist(user, true);
                 if (res is RedirectToRouteResult)
                     return res;
 
                 user.UpdatedAt = DateTime.UtcNow;
+                user.UpdatedBy = CurrentUser.Instance.Id;
                 m_db.Entry(user).State = EntityState.Modified;
                 m_db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.UpdatedBy = new SelectList(m_db.Users, "Id", "Username", user.UpdatedBy);
             return View(user);
         }
 
@@ -134,6 +132,7 @@ namespace DeveloperTask.Controllers
             //m_db.Users.Remove(user);
             user.Disabled = true;
             user.UpdatedAt = DateTime.UtcNow;
+            user.UpdatedBy = CurrentUser.Instance.Id;
             m_db.Entry(user).State = EntityState.Modified;
             m_db.SaveChanges();
             return RedirectToAction("Index");
@@ -144,14 +143,15 @@ namespace DeveloperTask.Controllers
         #region ---- Methods ----
 
         /// <summary>
-        /// Check if any User with same username/email already exists
+        ///  Check if any User with same username/email already exists
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="user">User that needs to be matched with DB</param>
+        /// <param name="bExcludeCurrentUserId">Match results other then the provided User.</param>
         /// <returns></returns>
-        private ActionResult CheckUserWithEmailOrUsernameExist(User user, bool bFromUpdate = false)
+        private ActionResult ValidateUserWithEmailOrUsernameExist(User user, bool bExcludeCurrentUserId = false)
         {
             User existedUser = null;
-            if (bFromUpdate)
+            if (bExcludeCurrentUserId)
                 existedUser = m_db.Users.Where(x => x.Id != user.Id && (x.Username.ToLower() == user.Username.ToLower() || x.Email.ToLower() == user.Email.ToLower())).FirstOrDefault();
             else
                 existedUser = m_db.Users.Where(x => (x.Username.ToLower() == user.Username.ToLower() || x.Email.ToLower() == user.Email.ToLower())).FirstOrDefault();

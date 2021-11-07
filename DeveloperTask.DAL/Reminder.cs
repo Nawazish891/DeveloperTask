@@ -23,6 +23,7 @@ namespace DeveloperTask.DAL
         public bool Disabled { get; set; }
         public Nullable<System.DateTime> UpdatedAt { get; set; }
         public Nullable<long> UpdatedBy { get; set; }
+        public System.DateTime CreateDate { get; set; }
     
         public virtual Category Category { get; set; }
         public virtual SubCategory SubCategory { get; set; }

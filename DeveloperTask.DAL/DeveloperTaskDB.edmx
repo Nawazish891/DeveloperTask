@@ -27,6 +27,7 @@
           <Property Name="CategoryId" Type="bigint" Nullable="false" />
           <Property Name="SubCategoryId" Type="bigint" />
           <Property Name="CreatedBy" Type="bigint" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
           <Property Name="Disabled" Type="bit" Nullable="false" />
           <Property Name="UpdatedAt" Type="datetime" />
           <Property Name="UpdatedBy" Type="bigint" />
@@ -244,6 +245,7 @@
           <NavigationProperty Name="SubCategory" Relationship="Self.FK_Reminder_SubCategory" FromRole="Reminder" ToRole="SubCategory" />
           <NavigationProperty Name="User" Relationship="Self.FK_Reminder_User" FromRole="Reminder" ToRole="User" />
           <NavigationProperty Name="User1" Relationship="Self.FK_Reminder_User1" FromRole="Reminder" ToRole="User" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <EntityType Name="SubCategory">
           <Key>
@@ -471,6 +473,7 @@
           <EntitySetMapping Name="Reminders">
             <EntityTypeMapping TypeName="DeveloperTaskDBModel.Reminder">
               <MappingFragment StoreEntitySet="Reminder">
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="Date" ColumnName="Date" />

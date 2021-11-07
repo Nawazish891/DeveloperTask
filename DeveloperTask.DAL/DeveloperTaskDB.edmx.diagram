@@ -17,6 +17,8 @@
         <AssociationConnector Association="DeveloperTaskDBModel.FK_Reminder_User" ManuallyRouted="false" />
         <AssociationConnector Association="DeveloperTaskDBModel.FK_Reminder_User1" ManuallyRouted="false" />
         <AssociationConnector Association="DeveloperTaskDBModel.FK_User_User" ManuallyRouted="false" />
+        <AssociationConnector Association="DeveloperTaskDBModel.FK_SubCategory_User" />
+        <AssociationConnector Association="DeveloperTaskDBModel.FK_SubCategory_User1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

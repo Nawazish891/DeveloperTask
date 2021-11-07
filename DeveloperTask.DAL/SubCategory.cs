@@ -26,9 +26,13 @@ namespace DeveloperTask.DAL
         public bool Disabled { get; set; }
         public Nullable<System.DateTime> UpdatedAt { get; set; }
         public System.DateTime CreateDate { get; set; }
+        public long CreatedBy { get; set; }
+        public Nullable<long> UpdatedBy { get; set; }
     
         public virtual Category Category { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Reminder> Reminders { get; set; }
+        public virtual User User { get; set; }
+        public virtual User User1 { get; set; }
     }
 }

@@ -38,9 +38,11 @@
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="CatergoryId" Type="bigint" Nullable="false" />
+          <Property Name="CreatedBy" Type="bigint" Nullable="false" />
           <Property Name="CreateDate" Type="datetime" Nullable="false" />
           <Property Name="Disabled" Type="bit" Nullable="false" />
           <Property Name="UpdatedAt" Type="datetime" />
+          <Property Name="UpdatedBy" Type="bigint" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -139,6 +141,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SubCategory_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="SubCategory" Type="Self.SubCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubCategory">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubCategory_User1">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="SubCategory" Type="Self.SubCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubCategory">
+              <PropertyRef Name="UpdatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="DeveloperTaskDBModelStoreContainer">
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Reminder" EntityType="Self.Reminder" Schema="dbo" store:Type="Tables" />
@@ -170,6 +196,14 @@
           </AssociationSet>
           <AssociationSet Name="FK_SubCategory_Category" Association="Self.FK_SubCategory_Category">
             <End Role="Category" EntitySet="Category" />
+            <End Role="SubCategory" EntitySet="SubCategory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubCategory_User" Association="Self.FK_SubCategory_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="SubCategory" EntitySet="SubCategory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubCategory_User1" Association="Self.FK_SubCategory_User1">
+            <End Role="User" EntitySet="User" />
             <End Role="SubCategory" EntitySet="SubCategory" />
           </AssociationSet>
         </EntityContainer>
@@ -223,6 +257,10 @@
           <NavigationProperty Name="Category" Relationship="Self.FK_SubCategory_Category" FromRole="SubCategory" ToRole="Category" />
           <NavigationProperty Name="Reminders" Relationship="Self.FK_Reminder_SubCategory" FromRole="SubCategory" ToRole="Reminder" />
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Int64" Nullable="false" />
+          <Property Name="UpdatedBy" Type="Int64" />
+          <NavigationProperty Name="User" Relationship="DeveloperTaskDBModel.FK_SubCategory_User" FromRole="SubCategory" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="DeveloperTaskDBModel.FK_SubCategory_User1" FromRole="SubCategory" ToRole="User" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -242,6 +280,8 @@
           <NavigationProperty Name="Reminders1" Relationship="Self.FK_Reminder_User1" FromRole="User" ToRole="Reminder" />
           <NavigationProperty Name="User1" Relationship="Self.FK_User_User" FromRole="User" ToRole="User1" />
           <NavigationProperty Name="User2" Relationship="Self.FK_User_User" FromRole="User1" ToRole="User" />
+          <NavigationProperty Name="SubCategories" Relationship="DeveloperTaskDBModel.FK_SubCategory_User" FromRole="User" ToRole="SubCategory" />
+          <NavigationProperty Name="SubCategories1" Relationship="DeveloperTaskDBModel.FK_SubCategory_User1" FromRole="User" ToRole="SubCategory" />
         </EntityType>
         <Association Name="FK_Category_User">
           <End Role="User" Type="Self.User" Multiplicity="1" />
@@ -376,7 +416,39 @@
             <End Role="User" EntitySet="Users" />
             <End Role="User1" EntitySet="Users" />
           </AssociationSet>
+          <AssociationSet Name="FK_SubCategory_User" Association="DeveloperTaskDBModel.FK_SubCategory_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="SubCategory" EntitySet="SubCategories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubCategory_User1" Association="DeveloperTaskDBModel.FK_SubCategory_User1">
+            <End Role="User" EntitySet="Users" />
+            <End Role="SubCategory" EntitySet="SubCategories" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="FK_SubCategory_User">
+          <End Type="DeveloperTaskDBModel.User" Role="User" Multiplicity="1" />
+          <End Type="DeveloperTaskDBModel.SubCategory" Role="SubCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubCategory">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubCategory_User1">
+          <End Type="DeveloperTaskDBModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="DeveloperTaskDBModel.SubCategory" Role="SubCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubCategory">
+              <PropertyRef Name="UpdatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -414,6 +486,8 @@
           <EntitySetMapping Name="SubCategories">
             <EntityTypeMapping TypeName="DeveloperTaskDBModel.SubCategory">
               <MappingFragment StoreEntitySet="SubCategory">
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />

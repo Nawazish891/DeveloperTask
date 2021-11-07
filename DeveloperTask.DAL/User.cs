@@ -12,7 +12,7 @@ namespace DeveloperTask.DAL
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-
+        
     public partial class User
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -23,6 +23,8 @@ namespace DeveloperTask.DAL
             this.Reminders = new HashSet<Reminder>();
             this.Reminders1 = new HashSet<Reminder>();
             this.User1 = new HashSet<User>();
+            this.SubCategories = new HashSet<SubCategory>();
+            this.SubCategories1 = new HashSet<SubCategory>();
         }
 
         public long Id { get; set; }
@@ -38,7 +40,7 @@ namespace DeveloperTask.DAL
         public bool Disabled { get; set; }
         public Nullable<System.DateTime> UpdatedAt { get; set; }
         public Nullable<long> UpdatedBy { get; set; }
-
+    
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Category> Categories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -50,5 +52,9 @@ namespace DeveloperTask.DAL
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<User> User1 { get; set; }
         public virtual User User2 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SubCategory> SubCategories { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SubCategory> SubCategories1 { get; set; }
     }
 }

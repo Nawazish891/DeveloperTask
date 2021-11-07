@@ -12,12 +12,12 @@ namespace DeveloperTask.Controllers
 {
     public class UsersController : Controller
     {
-        private DeveloperTaskDBEntities db = new DeveloperTaskDBEntities();
+        private DeveloperTaskDBEntities m_db = new DeveloperTaskDBEntities();
 
         // GET: Users
         public ActionResult Index()
         {
-            var users = db.Users.Where(x => x.Disabled == false);
+            var users = m_db.Users.Where(x => x.Disabled == false);
             ViewBag.ErrorMessage = TempData["UserExistError"];
             return View(users.ToList());
         }
@@ -29,7 +29,7 @@ namespace DeveloperTask.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.Users.Where(x => x.Disabled == false && x.Id == id).FirstOrDefault();
+            User user = m_db.Users.Where(x => x.Disabled == false && x.Id == id).FirstOrDefault();
             if (user == null)
             {
                 return HttpNotFound();
@@ -40,7 +40,7 @@ namespace DeveloperTask.Controllers
         // GET: Users/Create
         public ActionResult Create()
         {
-            ViewBag.UpdatedBy = new SelectList(db.Users, "Id", "Username");
+            ViewBag.UpdatedBy = new SelectList(m_db.Users, "Id", "Username");
             return View();
         }
 
@@ -59,12 +59,12 @@ namespace DeveloperTask.Controllers
 
                 user.CreateDate = DateTime.UtcNow;
                 user.Disabled = false;
-                db.Users.Add(user);
-                db.SaveChanges();
+                m_db.Users.Add(user);
+                m_db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.UpdatedBy = new SelectList(db.Users, "Id", "Username", user.UpdatedBy);
+            ViewBag.UpdatedBy = new SelectList(m_db.Users, "Id", "Username", user.UpdatedBy);
             return View(user);
         }
 
@@ -75,12 +75,12 @@ namespace DeveloperTask.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.Users.Where(x => x.Disabled == false && x.Id == id).FirstOrDefault();
+            User user = m_db.Users.Where(x => x.Disabled == false && x.Id == id).FirstOrDefault();
             if (user == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.UpdatedBy = new SelectList(db.Users, "Id", "Username", user.UpdatedBy);
+            ViewBag.UpdatedBy = new SelectList(m_db.Users, "Id", "Username", user.UpdatedBy);
             return View(user);
         }
 
@@ -98,11 +98,11 @@ namespace DeveloperTask.Controllers
                     return res;
 
                 user.UpdatedAt = DateTime.UtcNow;
-                db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
+                m_db.Entry(user).State = EntityState.Modified;
+                m_db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.UpdatedBy = new SelectList(db.Users, "Id", "Username", user.UpdatedBy);
+            ViewBag.UpdatedBy = new SelectList(m_db.Users, "Id", "Username", user.UpdatedBy);
             return View(user);
         }
 
@@ -113,7 +113,7 @@ namespace DeveloperTask.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.Users.Where(x => x.Disabled == false && x.Id == id).FirstOrDefault();
+            User user = m_db.Users.Where(x => x.Disabled == false && x.Id == id).FirstOrDefault();
             if (user == null)
             {
                 return HttpNotFound();
@@ -126,12 +126,12 @@ namespace DeveloperTask.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(long id)
         {
-            User user = db.Users.Where(x => x.Disabled == false && x.Id == id).FirstOrDefault();
-            //db.Users.Remove(user);
+            User user = m_db.Users.Where(x => x.Disabled == false && x.Id == id).FirstOrDefault();
+            //m_db.Users.Remove(user);
             user.Disabled = true;
             user.UpdatedAt = DateTime.UtcNow;
-            db.Entry(user).State = EntityState.Modified;
-            db.SaveChanges();
+            m_db.Entry(user).State = EntityState.Modified;
+            m_db.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -144,9 +144,9 @@ namespace DeveloperTask.Controllers
         {
             User existedUser = null;
             if (bFromUpdate)
-                existedUser = db.Users.Where(x => x.Id != user.Id && (x.Username.ToLower() == user.Username.ToLower() || x.Email.ToLower() == user.Email.ToLower())).FirstOrDefault();
+                existedUser = m_db.Users.Where(x => x.Id != user.Id && (x.Username.ToLower() == user.Username.ToLower() || x.Email.ToLower() == user.Email.ToLower())).FirstOrDefault();
             else
-                existedUser = db.Users.Where(x => (x.Username.ToLower() == user.Username.ToLower() || x.Email.ToLower() == user.Email.ToLower())).FirstOrDefault();
+                existedUser = m_db.Users.Where(x => (x.Username.ToLower() == user.Username.ToLower() || x.Email.ToLower() == user.Email.ToLower())).FirstOrDefault();
 
             if (existedUser != null)
             {
@@ -164,7 +164,7 @@ namespace DeveloperTask.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                m_db.Dispose();
             }
             base.Dispose(disposing);
         }

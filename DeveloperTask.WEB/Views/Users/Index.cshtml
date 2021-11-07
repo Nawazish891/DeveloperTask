@@ -9,6 +9,13 @@
 <p>
     @Html.ActionLink("Create New User", "Create")
 </p>
+
+@if(ViewBag.ErrorMessage != null)
+            {
+                <h3 style="color:red">
+                    Unable to create user because @ViewBag.ErrorMessage
+                </h3>
+            }
 <table class="table">
     <tr>
         <th>

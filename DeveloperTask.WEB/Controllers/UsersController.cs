@@ -18,6 +18,7 @@ namespace DeveloperTask.Controllers
         public ActionResult Index()
         {
             var users = db.Users.Where(x=>x.Disabled == false);
+            ViewBag.ErrorMessage = TempData["UserExistError"];
             return View(users.ToList());
         }
 
@@ -52,6 +53,10 @@ namespace DeveloperTask.Controllers
         {
             if (ModelState.IsValid)
             {
+                var res = CheckUserWithEmailOrUsernameExist(user);
+                if (res is RedirectToRouteResult)
+                    return res;
+
                 user.CreateDate = DateTime.UtcNow;
                 user.Disabled = false;
                 db.Users.Add(user);
@@ -88,6 +93,10 @@ namespace DeveloperTask.Controllers
         {
             if (ModelState.IsValid)
             {
+                var res = CheckUserWithEmailOrUsernameExist(user,true);
+                if (res is RedirectToRouteResult)
+                    return res;
+
                 user.UpdatedAt = DateTime.UtcNow;
                 db.Entry(user).State = EntityState.Modified;
                 db.SaveChanges();
@@ -124,6 +133,27 @@ namespace DeveloperTask.Controllers
             db.Entry(user).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        /// <summary>
+        /// check if any User with same username/email already exists
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        private ActionResult CheckUserWithEmailOrUsernameExist(User user, bool bFromUpdate=false)
+        {
+            User existedUser = null;
+            if (bFromUpdate)
+                existedUser = db.Users.Where(x => x.Disabled == false && x.Id != user.Id && (x.Username.ToLower() == user.Username.ToLower() || x.Email.ToLower() == user.Email.ToLower())).FirstOrDefault();
+            else
+                existedUser = db.Users.Where(x => x.Disabled == false && (x.Username.ToLower() == user.Username.ToLower() || x.Email.ToLower() == user.Email.ToLower())).FirstOrDefault();
+
+            if (existedUser != null)
+            {
+                TempData["UserExistError"] = "another user with same Username or Email already exists in the system.";
+                return RedirectToAction("Index");
+            }
+            return new EmptyResult();
         }
 
         /// <summary>

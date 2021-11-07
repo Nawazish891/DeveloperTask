@@ -12,7 +12,11 @@ namespace DeveloperTask.Controllers
 {
     public class UsersController : Controller
     {
+        #region ---- Member Variables ----
         private DeveloperTaskDBEntities m_db = new DeveloperTaskDBEntities();
+        #endregion
+
+        #region ----Actions----
 
         // GET: Users
         public ActionResult Index()
@@ -135,6 +139,10 @@ namespace DeveloperTask.Controllers
             return RedirectToAction("Index");
         }
 
+        #endregion
+
+        #region ---- Methods ----
+
         /// <summary>
         /// Check if any User with same username/email already exists
         /// </summary>
@@ -156,6 +164,10 @@ namespace DeveloperTask.Controllers
             return new EmptyResult();
         }
 
+        #endregion
+
+        #region ---- Dispose ----
+
         /// <summary>
         /// Disposing DB Context
         /// </summary>
@@ -168,5 +180,6 @@ namespace DeveloperTask.Controllers
             }
             base.Dispose(disposing);
         }
+        #endregion
     }
 }

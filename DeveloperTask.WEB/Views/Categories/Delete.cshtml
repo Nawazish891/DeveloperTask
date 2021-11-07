@@ -39,7 +39,41 @@
 
     </dl>
 
-    @using (Html.BeginForm()) {
+    <h4>Sub Categories</h4>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateDate) (UTC)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedAt) (UTC)
+            </th>
+        </tr>
+
+        @foreach (var item in Model.SubCategories)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdatedAt)
+                </td>
+            </tr>
+        }
+
+    </table>
+
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">

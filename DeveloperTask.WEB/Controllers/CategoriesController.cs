@@ -32,7 +32,7 @@ namespace DeveloperTask.WEB.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = m_db.Categories.Where(x => x.Disabled == false && x.Id == id && x.CreatedBy == CurrentUser.Instance.Id).FirstOrDefault();
+            Category category = m_db.Categories.Include(x=>x.SubCategories).Where(x => x.Disabled == false && x.Id == id && x.CreatedBy == CurrentUser.Instance.Id).FirstOrDefault();
             if (category == null)
             {
                 return HttpNotFound();
@@ -105,7 +105,7 @@ namespace DeveloperTask.WEB.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = m_db.Categories.Where(x => x.Disabled == false && x.Id == id && x.CreatedBy == CurrentUser.Instance.Id).FirstOrDefault();
+            Category category = m_db.Categories.Include(x=>x.SubCategories).Where(x => x.Disabled == false && x.Id == id && x.CreatedBy == CurrentUser.Instance.Id).FirstOrDefault();
 
             if (category == null)
             {
@@ -119,14 +119,36 @@ namespace DeveloperTask.WEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(long id)
         {
-            Category category = m_db.Categories.Where(x => x.Disabled == false && x.Id == id && x.CreatedBy == CurrentUser.Instance.Id).FirstOrDefault();
+            Category category = m_db.Categories.Include(x=>x.SubCategories).Where(x => x.Disabled == false && x.Id == id && x.CreatedBy == CurrentUser.Instance.Id).FirstOrDefault();
             category.UpdatedAt = DateTime.UtcNow;
             category.UpdatedBy = CurrentUser.Instance.Id;
             category.Disabled = true;
             m_db.Entry(category).State = EntityState.Modified;
+            
+            if(category.SubCategories.Any())
+            {
+                foreach(SubCategory subCat in category.SubCategories)
+                {
+                    subCat.UpdatedAt = DateTime.UtcNow;
+                    subCat.UpdatedBy = CurrentUser.Instance.Id;
+                    subCat.Disabled = true;
+                    m_db.Entry(subCat).State = EntityState.Modified;
+                }
+            }
+
             m_db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+
+        // POST: Categories/CreateSubCategory/5
+        public ActionResult CreateSubCategory(long? id)
+        {
+            TempData["CategoryId"] = id;
+            return RedirectToAction("Create", "SubCategories");
+        }
+
+        
         #endregion
 
         #region ---- Dispose ----

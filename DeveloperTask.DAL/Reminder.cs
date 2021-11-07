@@ -11,11 +11,14 @@ namespace DeveloperTask.DAL
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Reminder
     {
         public long Id { get; set; }
+        [Required]
         public string Title { get; set; }
+        [Required]
         public System.DateTime Date { get; set; }
         public long CategoryId { get; set; }
         public Nullable<long> SubCategoryId { get; set; }

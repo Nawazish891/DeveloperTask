@@ -45,6 +45,59 @@
 
     </dl>
 </div>
+
+@if (Model.Reminders.Any())
+{
+    <h4><b>Reminders</b></h4>
+
+    <table class="table">
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Date
+            </th>
+            <th>
+                Category
+            </th>
+            <th>
+                Sub Category
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateDate) (UTC)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedAt) (UTC)
+            </th>
+        </tr>
+
+        @foreach (var item in Model.Reminders)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubCategory.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdatedAt)
+                </td>
+            </tr>
+        }
+
+    </table>
+}
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")

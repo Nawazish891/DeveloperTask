@@ -11,139 +11,134 @@ using DeveloperTask.WEB.Models;
 
 namespace DeveloperTask.WEB.Controllers
 {
-    public class SubCategoriesController : Controller
+    public class RemindersController : Controller
     {
         #region ---- Member Variables ----
         private DeveloperTaskDBEntities m_db = new DeveloperTaskDBEntities();
         #endregion
 
-        #region ---- Actions ----
-        // GET: SubCategories
+        #region ---- Actions ---- 
+        // GET: Reminders
         public ActionResult Index()
         {
-            var subCategories = m_db.SubCategories.Include(s => s.Category).Where(x => x.Disabled == false);
-            return View(subCategories.ToList());
+            var reminders = m_db.Reminders.Include(r => r.Category).Include(r => r.SubCategory).Where(x=>x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id);
+            return View(reminders.ToList());
         }
 
-        // GET: SubCategories/Details/5
+        // GET: Reminders/Details/5
         public ActionResult Details(long? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SubCategory subCategory = m_db.SubCategories.Include(x=>x.Reminders).Where(x=>x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id && x.Id == id).FirstOrDefault();
-            if (subCategory == null)
+            Reminder reminder = m_db.Reminders.Where(x=>x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id && x.Id == id).FirstOrDefault();
+            if (reminder == null)
             {
                 return HttpNotFound();
             }
-            return View(subCategory);
+            return View(reminder);
         }
 
-        // GET: SubCategories/Create
+        // GET: Reminders/Create
         public ActionResult Create()
         {
-            SubCategory subCategory = new SubCategory()
-            {
-                CatergoryId = Convert.ToInt64(TempData["CategoryId"])
-            };
             ViewBag.Catergories = new SelectList(m_db.Categories.Where(x=>x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id), "Id", "Name");
-            return View(subCategory);
+            ViewBag.SubCatergories = new SelectList(m_db.SubCategories.Where(x => x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id), "Id", "Name");
+            return View();
         }
 
-        // POST: SubCategories/Create
+        // POST: Reminders/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,CatergoryId")] SubCategory subCategory)
+        public ActionResult Create([Bind(Include = "Id,Title,Date,CategoryId,SubCategoryId")] Reminder reminder)
         {
-            if(subCategory.CatergoryId == 0)
-                return HttpNotFound("Category must be selected to Add Sub Category.");
-
             if (ModelState.IsValid)
             {
-                subCategory.CreateDate = DateTime.UtcNow;
-                subCategory.CreatedBy = CurrentUser.Instance.Id;
-                m_db.SubCategories.Add(subCategory);
+                reminder.CreatedBy = CurrentUser.Instance.Id;
+                reminder.CreateDate = DateTime.UtcNow;
+                m_db.Reminders.Add(reminder);
                 m_db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
             ViewBag.Catergories = new SelectList(m_db.Categories.Where(x=>x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id), "Id", "Name");
-            return View(subCategory);
+            ViewBag.SubCatergories = new SelectList(m_db.SubCategories.Where(x => x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id), "Id", "Name");
+            return View(reminder);
         }
 
-        // GET: SubCategories/Edit/5
+        // GET: Reminders/Edit/5
         public ActionResult Edit(long? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SubCategory subCategory = m_db.SubCategories.Where(x=>x.Disabled == false && x.Id == id).FirstOrDefault();
-            if (subCategory == null)
+            Reminder reminder = m_db.Reminders.Where(x => x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id && x.Id == id).FirstOrDefault();
+
+            if (reminder == null)
             {
                 return HttpNotFound();
             }
             ViewBag.Catergories = new SelectList(m_db.Categories.Where(x=>x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id), "Id", "Name");
-            return View(subCategory);
+            ViewBag.SubCatergories = new SelectList(m_db.SubCategories.Where(x => x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id), "Id", "Name");
+            return View(reminder);
         }
 
-        // POST: SubCategories/Edit/5
+        // POST: Reminders/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,CatergoryId,CreateDate,CreatedBy")] SubCategory subCategory)
+        public ActionResult Edit([Bind(Include = "Id,Title,Date,CategoryId,SubCategoryId,CreatedBy,CreateDate")] Reminder reminder)
         {
             if (ModelState.IsValid)
             {
-                subCategory.UpdatedAt = DateTime.UtcNow;
-                subCategory.UpdatedBy = CurrentUser.Instance.Id;
-                m_db.Entry(subCategory).State = EntityState.Modified;
+                reminder.UpdatedAt = DateTime.UtcNow;
+                reminder.UpdatedBy = CurrentUser.Instance.Id;
+                m_db.Entry(reminder).State = EntityState.Modified;
                 m_db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.Catergories = new SelectList(m_db.Categories.Where(x=>x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id), "Id", "Name");
-            return View(subCategory);
+            ViewBag.SubCatergories = new SelectList(m_db.SubCategories.Where(x => x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id), "Id", "Name");
+            return View(reminder);
         }
 
-        // GET: SubCategories/Delete/5
+        // GET: Reminders/Delete/5
         public ActionResult Delete(long? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SubCategory subCategory = m_db.SubCategories.Where(x => x.Disabled == false && x.Id == id).FirstOrDefault();
-            if (subCategory == null)
+            Reminder reminder = m_db.Reminders.Where(x => x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id && x.Id == id).FirstOrDefault();
+            if (reminder == null)
             {
                 return HttpNotFound();
             }
-            return View(subCategory);
+            return View(reminder);
         }
 
-        // POST: SubCategories/Delete/5
+        // POST: Reminders/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(long id)
         {
-            SubCategory subCategory = m_db.SubCategories.Where(x => x.Disabled == false && x.Id == id).FirstOrDefault();
-            subCategory.UpdatedAt = DateTime.UtcNow;
-            subCategory.UpdatedBy = CurrentUser.Instance.Id;
-            subCategory.Disabled = true;
-            m_db.Entry(subCategory).State = EntityState.Modified;
+            Reminder reminder = m_db.Reminders.Where(x => x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id && x.Id == id).FirstOrDefault();
+            reminder.UpdatedAt = DateTime.UtcNow;
+            reminder.UpdatedBy = CurrentUser.Instance.Id;
+            reminder.Disabled = true;
+            m_db.Entry(reminder).State = EntityState.Modified;
             m_db.SaveChanges();
             return RedirectToAction("Index");
         }
+
         #endregion
 
         #region ---- Dispose ----
-        /// <summary>
-        /// Disposing DB Context
-        /// </summary>
-        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

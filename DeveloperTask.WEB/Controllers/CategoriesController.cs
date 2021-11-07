@@ -32,7 +32,7 @@ namespace DeveloperTask.WEB.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = m_db.Categories.Include(x=>x.SubCategories).Where(x => x.Disabled == false && x.Id == id && x.CreatedBy == CurrentUser.Instance.Id).FirstOrDefault();
+            Category category = m_db.Categories.Include(x=>x.Reminders).Include(x=>x.SubCategories).Where(x => x.Disabled == false && x.Id == id && x.CreatedBy == CurrentUser.Instance.Id).FirstOrDefault();
             if (category == null)
             {
                 return HttpNotFound();

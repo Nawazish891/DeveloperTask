@@ -21,6 +21,7 @@ namespace DeveloperTask.WEB.Controllers
         // GET: Categories
         public ActionResult Index()
         {
+            CheckSessionValid();
             var categories = m_db.Categories.Where(x=>x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id);
             return View(categories.ToList());
         }
@@ -28,6 +29,8 @@ namespace DeveloperTask.WEB.Controllers
         // GET: Categories/Details/5
         public ActionResult Details(long? id)
         {
+            CheckSessionValid();
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -43,6 +46,8 @@ namespace DeveloperTask.WEB.Controllers
         // GET: Categories/Create
         public ActionResult Create()
         {
+            CheckSessionValid();
+
             return View();
         }
 
@@ -53,6 +58,8 @@ namespace DeveloperTask.WEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name")] Category category)
         {
+            CheckSessionValid();
+
             if (ModelState.IsValid)
             {
                 category.CreatedBy = CurrentUser.Instance.Id;
@@ -67,6 +74,8 @@ namespace DeveloperTask.WEB.Controllers
         // GET: Categories/Edit/5
         public ActionResult Edit(long? id)
         {
+            CheckSessionValid();
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -86,6 +95,8 @@ namespace DeveloperTask.WEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,CreateDate,CreatedBy")] Category category)
         {
+            CheckSessionValid();
+
             if (ModelState.IsValid)
             {
                 category.UpdatedAt = DateTime.UtcNow;
@@ -101,6 +112,8 @@ namespace DeveloperTask.WEB.Controllers
         // GET: Categories/Delete/5
         public ActionResult Delete(long? id)
         {
+            CheckSessionValid();
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -119,6 +132,8 @@ namespace DeveloperTask.WEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(long id)
         {
+            CheckSessionValid();
+
             Category category = m_db.Categories.Include(x=>x.SubCategories).Where(x => x.Disabled == false && x.Id == id && x.CreatedBy == CurrentUser.Instance.Id).FirstOrDefault();
             category.UpdatedAt = DateTime.UtcNow;
             category.UpdatedBy = CurrentUser.Instance.Id;
@@ -144,11 +159,25 @@ namespace DeveloperTask.WEB.Controllers
         // POST: Categories/CreateSubCategory/5
         public ActionResult CreateSubCategory(long? id)
         {
+            CheckSessionValid();
+
             TempData["CategoryId"] = id;
             return RedirectToAction("Create", "SubCategories");
         }
 
-        
+
+        #endregion
+
+        #region ---- Methods ----
+
+        /// <summary>
+        /// check if user is logged in otherwise redirect to Login
+        /// </summary>
+        private void CheckSessionValid()
+        {
+            if (Session["UserID"] == null)
+                Response.Redirect("/Login/Index");
+        }
         #endregion
 
         #region ---- Dispose ----

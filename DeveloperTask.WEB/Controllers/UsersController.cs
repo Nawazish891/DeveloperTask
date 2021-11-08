@@ -22,6 +22,7 @@ namespace DeveloperTask.Controllers
         // GET: Users
         public ActionResult Index()
         {
+            CheckSessionValid();
             var users = m_db.Users.Where(x => x.Disabled == false);
             ViewBag.ErrorMessage = TempData["UserExistError"];
             return View(users.ToList());
@@ -30,6 +31,8 @@ namespace DeveloperTask.Controllers
         // GET: Users/Details/5
         public ActionResult Details(long? id)
         {
+            CheckSessionValid();
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -45,6 +48,8 @@ namespace DeveloperTask.Controllers
         // GET: Users/Create
         public ActionResult Create()
         {
+            CheckSessionValid();
+
             return View();
         }
 
@@ -55,6 +60,8 @@ namespace DeveloperTask.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Username,Password,Email")] User user)
         {
+            CheckSessionValid();
+
             if (ModelState.IsValid)
             {
                 var res = ValidateUserWithEmailOrUsernameExist(user);
@@ -74,6 +81,8 @@ namespace DeveloperTask.Controllers
         // GET: Users/Edit/5
         public ActionResult Edit(long? id)
         {
+            CheckSessionValid();
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -93,6 +102,8 @@ namespace DeveloperTask.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Username,Password,Email,CreateDate")] User user)
         {
+            CheckSessionValid();
+
             if (ModelState.IsValid)
             {
                 var res = ValidateUserWithEmailOrUsernameExist(user, true);
@@ -111,6 +122,8 @@ namespace DeveloperTask.Controllers
         // GET: Users/Delete/5
         public ActionResult Delete(long? id)
         {
+            CheckSessionValid();
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -128,6 +141,8 @@ namespace DeveloperTask.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(long id)
         {
+            CheckSessionValid();
+
             User user = m_db.Users.Where(x => x.Disabled == false && x.Id == id).FirstOrDefault();
             //m_db.Users.Remove(user);
             user.Disabled = true;
@@ -162,6 +177,15 @@ namespace DeveloperTask.Controllers
                 return RedirectToAction("Index");
             }
             return new EmptyResult();
+        }
+
+        /// <summary>
+        /// check if user is logged in otherwise redirect to Login
+        /// </summary>
+        private void CheckSessionValid()
+        {
+            if (Session["UserID"] == null)
+                Response.Redirect("/Login/Index");
         }
 
         #endregion

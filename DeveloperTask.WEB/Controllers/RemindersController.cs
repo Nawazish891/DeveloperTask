@@ -21,6 +21,7 @@ namespace DeveloperTask.WEB.Controllers
         // GET: Reminders
         public ActionResult Index()
         {
+            CheckSessionValid();
             var reminders = m_db.Reminders.Include(r => r.Category).Include(r => r.SubCategory).Where(x=>x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id);
             return View(reminders.ToList());
         }
@@ -28,6 +29,7 @@ namespace DeveloperTask.WEB.Controllers
         // GET: Reminders/Details/5
         public ActionResult Details(long? id)
         {
+            CheckSessionValid();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -43,6 +45,7 @@ namespace DeveloperTask.WEB.Controllers
         // GET: Reminders/Create
         public ActionResult Create()
         {
+            CheckSessionValid();
             ViewBag.Catergories = new SelectList(m_db.Categories.Where(x=>x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id), "Id", "Name");
             ViewBag.SubCatergories = new SelectList(m_db.SubCategories.Where(x => x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id), "Id", "Name");
             return View();
@@ -55,6 +58,7 @@ namespace DeveloperTask.WEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Title,Date,CategoryId,SubCategoryId")] Reminder reminder)
         {
+            CheckSessionValid();
             if (ModelState.IsValid)
             {
                 reminder.CreatedBy = CurrentUser.Instance.Id;
@@ -72,6 +76,7 @@ namespace DeveloperTask.WEB.Controllers
         // GET: Reminders/Edit/5
         public ActionResult Edit(long? id)
         {
+            CheckSessionValid();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -94,6 +99,7 @@ namespace DeveloperTask.WEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Title,Date,CategoryId,SubCategoryId,CreatedBy,CreateDate")] Reminder reminder)
         {
+            CheckSessionValid();
             if (ModelState.IsValid)
             {
                 reminder.UpdatedAt = DateTime.UtcNow;
@@ -110,6 +116,7 @@ namespace DeveloperTask.WEB.Controllers
         // GET: Reminders/Delete/5
         public ActionResult Delete(long? id)
         {
+            CheckSessionValid();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -127,6 +134,7 @@ namespace DeveloperTask.WEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(long id)
         {
+            CheckSessionValid();
             Reminder reminder = m_db.Reminders.Where(x => x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id && x.Id == id).FirstOrDefault();
             reminder.UpdatedAt = DateTime.UtcNow;
             reminder.UpdatedBy = CurrentUser.Instance.Id;
@@ -136,6 +144,18 @@ namespace DeveloperTask.WEB.Controllers
             return RedirectToAction("Index");
         }
 
+        #endregion
+
+        #region ---- Methods ----
+
+        /// <summary>
+        /// check if user is logged in otherwise redirect to Login
+        /// </summary>
+        private void CheckSessionValid()
+        {
+            if (Session["UserID"] == null)
+                Response.Redirect("/Login/Index");
+        }
         #endregion
 
         #region ---- Dispose ----

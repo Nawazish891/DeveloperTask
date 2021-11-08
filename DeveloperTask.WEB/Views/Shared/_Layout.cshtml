@@ -16,6 +16,9 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
+            <a class="navbar-brand">
+                Welcome @DeveloperTask.WEB.Models.CurrentUser.Instance.Username (@DeveloperTask.WEB.Models.CurrentUser.Instance.Email)
+            </a>
                 @Html.ActionLink("Developer Task", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
@@ -25,6 +28,7 @@
                     <li>@Html.ActionLink("Categories", "Index", "Categories")</li>
                     <li>@Html.ActionLink("SubCategories", "Index", "SubCategories")</li>
                     <li>@Html.ActionLink("Reminders", "Index", "Reminders")</li>
+                    <li>@Html.ActionLink("Logout", "Logout", "Login")</li>
                 </ul>
             </div>
         </div>

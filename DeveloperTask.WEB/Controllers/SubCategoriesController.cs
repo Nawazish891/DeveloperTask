@@ -21,6 +21,8 @@ namespace DeveloperTask.WEB.Controllers
         // GET: SubCategories
         public ActionResult Index()
         {
+            CheckSessionValid();
+
             var subCategories = m_db.SubCategories.Include(s => s.Category).Where(x => x.Disabled == false);
             return View(subCategories.ToList());
         }
@@ -28,6 +30,8 @@ namespace DeveloperTask.WEB.Controllers
         // GET: SubCategories/Details/5
         public ActionResult Details(long? id)
         {
+            CheckSessionValid();
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -43,6 +47,8 @@ namespace DeveloperTask.WEB.Controllers
         // GET: SubCategories/Create
         public ActionResult Create()
         {
+            CheckSessionValid();
+
             SubCategory subCategory = new SubCategory()
             {
                 CatergoryId = Convert.ToInt64(TempData["CategoryId"])
@@ -58,7 +64,9 @@ namespace DeveloperTask.WEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,CatergoryId")] SubCategory subCategory)
         {
-            if(subCategory.CatergoryId == 0)
+            CheckSessionValid();
+
+            if (subCategory.CatergoryId == 0)
                 return HttpNotFound("Category must be selected to Add Sub Category.");
 
             if (ModelState.IsValid)
@@ -77,6 +85,8 @@ namespace DeveloperTask.WEB.Controllers
         // GET: SubCategories/Edit/5
         public ActionResult Edit(long? id)
         {
+            CheckSessionValid();
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -97,6 +107,8 @@ namespace DeveloperTask.WEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,CatergoryId,CreateDate,CreatedBy")] SubCategory subCategory)
         {
+            CheckSessionValid();
+
             if (ModelState.IsValid)
             {
                 subCategory.UpdatedAt = DateTime.UtcNow;
@@ -112,6 +124,8 @@ namespace DeveloperTask.WEB.Controllers
         // GET: SubCategories/Delete/5
         public ActionResult Delete(long? id)
         {
+            CheckSessionValid();
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -129,6 +143,8 @@ namespace DeveloperTask.WEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(long id)
         {
+            CheckSessionValid();
+
             SubCategory subCategory = m_db.SubCategories.Where(x => x.Disabled == false && x.Id == id).FirstOrDefault();
             subCategory.UpdatedAt = DateTime.UtcNow;
             subCategory.UpdatedBy = CurrentUser.Instance.Id;
@@ -136,6 +152,18 @@ namespace DeveloperTask.WEB.Controllers
             m_db.Entry(subCategory).State = EntityState.Modified;
             m_db.SaveChanges();
             return RedirectToAction("Index");
+        }
+        #endregion
+
+        #region ---- Methods ----
+
+        /// <summary>
+        /// check if user is logged in otherwise redirect to Login
+        /// </summary>
+        private void CheckSessionValid()
+        {
+            if (Session["UserID"] == null)
+                Response.Redirect("/Login/Index");
         }
         #endregion
 

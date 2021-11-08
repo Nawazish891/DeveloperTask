@@ -14,7 +14,7 @@ namespace DeveloperTask.WEB.Models
             get
             {
                 if (m_Instance == null)
-                    m_Instance = new CurrentUser() { Id =1};
+                    m_Instance = new CurrentUser() { Id =0};
 
                 return m_Instance;
             }

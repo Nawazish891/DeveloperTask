@@ -35,7 +35,7 @@
         </dd>
     </dl>
 </div>
-@if (Model.SubCategories.Any())
+@if (Model.SubCategories.Where(x => x.Disabled == false).Any())
 {
     <h4><b>Sub Categories</b></h4>
     <table class="table">
@@ -51,7 +51,7 @@
             </th>
         </tr>
 
-        @foreach (var item in Model.SubCategories)
+        @foreach (var item in Model.SubCategories.Where(x=>x.Disabled == false))
         {
             <tr>
                 <td>
@@ -70,7 +70,7 @@
 
     </table>
 }
-@if (Model.Reminders.Any())
+@if (Model.Reminders.Where(x => x.Disabled == false).Any())
 {
     <h4><b>Reminders</b></h4>
 
@@ -96,7 +96,7 @@
             </th>
         </tr>
 
-        @foreach (var item in Model.Reminders)
+        @foreach (var item in Model.Reminders.Where(x => x.Disabled == false))
         {
             <tr>
                 <td>

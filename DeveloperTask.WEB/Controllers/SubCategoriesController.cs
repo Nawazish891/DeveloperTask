@@ -23,7 +23,7 @@ namespace DeveloperTask.WEB.Controllers
         {
             CheckSessionValid();
 
-            var subCategories = m_db.SubCategories.Include(s => s.Category).Where(x => x.Disabled == false);
+            var subCategories = m_db.SubCategories.Include(s => s.Category).Where(x => x.Disabled == false && x.CreatedBy == CurrentUser.Instance.Id );
             return View(subCategories.ToList());
         }
 

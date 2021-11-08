@@ -20,7 +20,10 @@ namespace DeveloperTask.DAL
         public string Title { get; set; }
         [Required]
         public System.DateTime Date { get; set; }
+        [Required]
+
         public long CategoryId { get; set; }
+
         public Nullable<long> SubCategoryId { get; set; }
         public long CreatedBy { get; set; }
         public bool Disabled { get; set; }
